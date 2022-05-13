@@ -3,7 +3,7 @@ import Image from 'next/image';
 import fetch from 'isomorphic-unfetch';
 import parse from 'html-react-parser';
 import utils from '../server/utils';
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {useRouter} from 'next/router';
 
 const ActivityElement = (props) => {
@@ -40,7 +40,7 @@ const ActivityElement = (props) => {
 								<div className="commentMedia actMediaExpand"><img src={com.media.preview}></img></div>
 						}
 						
-						<div>{(com.content.body.length > 350) ? com.content.body.substr(0, 350) + "..." : com.content.body}</div>
+						<div>{(com.content.body.length > 350) ? parse(com.content.body.substr(0, 350)) + "..." : parse(com.content.body)}</div>
 					</div>
 				</li>
 			))}

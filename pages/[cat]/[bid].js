@@ -3,14 +3,15 @@ import {useRouter} from 'next/router';
 import fetch from 'isomorphic-unfetch';
 import DOMPurify from 'isomorphic-dompurify';
 import parse from 'html-react-parser';
+import {useState, useEffect} from 'react';
+
 import utils from '../../server/utils';
 import Api from '../../server/api';
-
 import Navbar from '../../components/Navbar';
 import CommentFormElement from '../../components/CommentFormElement';
 import CommentList from '../../components/CommentList';
 
-import React, {useState, useEffect} from 'react';
+import {useAppContext, setAppContext} from '../../server/context';
 
 const PostView = (props) => {
 	
@@ -25,7 +26,7 @@ const PostView = (props) => {
 			vid: e.target.vid.value,
 			content: e.target.content.value
 		}
-		const response = await fetch('/api/com', {
+		const response = await fetch('/api/new/com', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -41,6 +42,9 @@ const PostView = (props) => {
 		}
 	}
 	
+	//context test
+	//console.log(useAppContext());
+	
 	return (
 		<body className="main">
 			<div className="mainContainer mainContainerPost mainfixedView" id="mainContainer">
@@ -53,7 +57,9 @@ const PostView = (props) => {
 						<a className="catElement catElementSelected"><img src="/assets/uicons/home.svg"></img></a>
 					</Link>
 					
-					<div className="catElement" id="postActionFlag">
+					<div className="catElement" id="postActionFlag" onClick={function(){
+						setAppContext({aver: "eso"});
+					}}>
 						<img src="/assets/uicons/flag.svg"></img>
 						<span className="catElementTitle">Denunciar</span>
 					</div>
@@ -148,23 +154,23 @@ const PostView = (props) => {
 }
 
 export async function getServerSideProps(context) {
-	let response = await Api.getData(context.req, `/api/post/${context.params.cat}/${context.params.bid}`);
-	if (response.success){
-		return {
-			props: {
-				category: (response.data.category) ? response.data.category : {},
-				box: response.data.box,
-				coms: response.data.coms
-			}
-		}
+	const empty = {props: {category: {}, box: {}, coms: []}}
+	
+	if (context.params.cat === "uploads"){
+		return empty;
 	} else {
-		return {
-			props: {
-				category: {},
-				box: {},
-				coms: []
+		let response = await Api.getData(context.req, `/api/box/${context.params.cat}/${context.params.bid}`);
+		if (response.success){
+			return {
+				props: {
+					category: (response.data.category) ? response.data.category : {},
+					box: response.data.box,
+					coms: response.data.coms
+				}
 			}
-		};
+		} else {
+			return empty;
+		}
 	}
 }
 

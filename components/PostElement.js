@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import fetch from 'isomorphic-unfetch';
 import parse from 'html-react-parser';
 import utils from '../server/utils';
 

@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import Layout from '../components/Layout';
 import ProgressBar from '@badrap/bar-of-progress';
 import Router from 'next/router';
+import {AppWrapper} from '../server/context';
 
 const progress = new ProgressBar({
 	size: 2,
@@ -11,7 +12,13 @@ const progress = new ProgressBar({
 });
 
 function MyApp({ Component, pageProps }) {
-  return (<Layout><Component {...pageProps} /></Layout>);
+  return (
+	<AppWrapper>
+		<Layout>
+			<Component {...pageProps} />
+		</Layout>
+	</AppWrapper>
+  );
 }
 
 Router.events.on("routeChangeStart", progress.start);

@@ -8,8 +8,6 @@ export default async function(req, res){
 	switch(req.method){
 		case "GET":
 			try {
-				console.log(index);
-				//const boxs = await Boxs.find({}).sort({"date.sticky": -1, "date.bump": -1}).skip(index).limit(21);
 				let boxs = await dbManager.queryDBSkip(models.Boxs, {}, {"date.sticky": -1, "date.bump": -1}, index, 21);
 				res.status(200).json({success: true, data: boxs});
 			} catch (e){

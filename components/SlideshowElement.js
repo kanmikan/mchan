@@ -3,36 +3,40 @@ import Image from 'next/image';
 import fetch from 'isomorphic-unfetch';
 import parse from 'html-react-parser';
 import utils from '../server/utils';
-import React, {useState, useEffect} from 'react';
-
+import Api from '../server/api';
 import {Slide} from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 
+import {useState, useEffect} from 'react';
+import {useRouter} from 'next/router';
+
 const SlideshowElement = (props) => {
 	
-	/*
-	const [data, setData] = useState(null);
+	const router = useRouter();
+	let cat = (router.query.cat) ? router.query.cat : "home";
+	const [data, setData] = useState([]);
+	
 	useEffect(() => {
-		fetch('/api/slideshow/home')
+		fetch(`${Api.HOST}/api/slideshow/${cat}`)
 		.then((res) => res.json())
 		.then((data) => {
-			setData(data.data[0]);
+			
+			let slideImages = [];
+			data.data.map(function(item){
+				slideImages.push({
+					url: item,
+					caption: ''
+				});
+			});
+			//console.log(slideImages);
+			setData(slideImages);
 		});
-	}, []);
-	*/
-	
-	const slideImages = [];
-	props.slidedata.forEach(function(item){
-		slideImages.push({
-			url: item,
-			caption: ''
-		});
-	});
+	}, [router.asPath]);
 	
 	return (
 		<div className="slide-container">
 			<Slide>
-				{slideImages.map((slideImage, index)=> (
+				{data.map((slideImage, index)=> (
 					<div className="each-slide" style={{"height": "200px"}} key={index}>
 						<div style={{
 							"backgroundImage": `url(${slideImage.url})`, 

@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
-import Navbar from '../components/Navbar';
-import PostContainer from '../components/PostContainer';
-import SlideshowElement from '../components/SlideshowElement';
-import ActivityElement from '../components/ActivityElement';
+import Navbar from '../../components/Navbar';
+import PostContainer from '../../components/PostContainer';
+import SlideshowElement from '../../components/SlideshowElement';
+import ActivityElement from '../../components/ActivityElement';
 
-import Api from '../server/api';
+import Api from '../../server/api';
+import {useRouter} from 'next/router';
 
-const Index = (props) => {
+const Category = (props) => {
 	return (
 		<body className="main">
 			<div className="mainContainer" id="mainContainer">
@@ -31,7 +32,7 @@ const Index = (props) => {
 			<div className="sideContainer">
 				<div className="sideContainerBottom" id="sideContainerBottom">
 					<div className="slideshowContainer" id="slidecontainer">
-						<SlideshowElement slidedata={props.slidedata} />
+						<SlideshowElement />
 					</div>
 					<div className="activityContainer">
 						<div className="sideTitle">Actividad Reciente</div>
@@ -45,7 +46,7 @@ const Index = (props) => {
 								- 
 								<Link href="info/welcome"><a>Acerca de</a></Link>
 								- 
-								<Link target="_blank" href="https://github.com/kanmikan/c-chan"><a>Github</a></Link>
+								<Link target="_blank" href="https://github.com/kanmikan/mchan"><a>Github</a></Link>
 							</div>
 						</div>
 					</div>
@@ -56,11 +57,12 @@ const Index = (props) => {
 	)
 }
 
+
 //TODO: esto quedó inutilizado, mover el slidedata a su componente y eliminar lo demas.
-//Es inviable el prerender si despues no se actualizan los datos al cambiar la ruta en el cliente... quien diseñó esto?
-export async function getServerSideProps({req}) {
-	let homedata = await Api.getData(req, "/api/home");
-	let slidedata = await Api.getData(req, "/api/slideshow/home");
+export async function getServerSideProps(context) {
+	let cat = context.query.cat;
+	let homedata = await Api.getData(context.req, `/api/${cat}`);
+	let slidedata = await Api.getData(context.req, `/api/slideshow/${cat}`);
 	
 	return {
 		props: {
@@ -71,4 +73,4 @@ export async function getServerSideProps({req}) {
 	};
 }
 
-export default Index;
+export default Category;
