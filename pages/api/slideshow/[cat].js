@@ -9,7 +9,8 @@ export default async function(req, res){
 	switch(req.method){
 		case "GET":
 			try {
-				let lastBoxs = await dbManager.queryDB(models.Boxs, {}, {"date.sticky": -1, "date.bump": -1}, 5);
+				let filter = (cat === "home") ? {} : {cat: cat};
+				let lastBoxs = await dbManager.queryDB(models.Boxs, filter, {"date.sticky": -1, "date.bump": -1}, 5);
 				let cats = await dbManager.queryDB(models.Cats, {});
 				
 				let imgArray = [];

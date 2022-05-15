@@ -36,14 +36,10 @@ const PostView = (props) => {
 		const result = await response.json();
 		if (result.success){
 			setComments(oldcoms => [result.data, ...oldcoms]);
-			
-			//resetear form acá
+			//reset de form primitivo
 			e.target.content.value = "";
 		}
 	}
-	
-	//context test
-	//console.log(useAppContext());
 	
 	return (
 		<body className="main">
@@ -57,9 +53,7 @@ const PostView = (props) => {
 						<a className="catElement catElementSelected"><img src="/assets/uicons/home.svg"></img></a>
 					</Link>
 					
-					<div className="catElement" id="postActionFlag" onClick={function(){
-						setAppContext({aver: "eso"});
-					}}>
+					<div className="catElement" id="postActionFlag">
 						<img src="/assets/uicons/flag.svg"></img>
 						<span className="catElementTitle">Denunciar</span>
 					</div>
@@ -82,10 +76,10 @@ const PostView = (props) => {
 					<span style={{marginLeft: "auto"}}></span>
 					
 					<div className="catElement catIcon">
-						<img src={(props.category.icon) ? props.category.icon : "/assets/logo.png"}></img>
+						<img src={(props.category) ? props.category.content.media.icon : "/assets/logo.png"}></img>
 						<span>
-							<Link href={(props.category.tid) ? props.category.tid : "/"}>
-								<a>{(props.category.name) ? props.category.name : "Unknown"}</a>
+							<Link href={(props.category) ? props.category.catid : "/"}>
+								<a>{(props.category) ? props.category.content.name : "Unknown"}</a>
 							</Link>
 						</span>
 					</div>
@@ -93,12 +87,12 @@ const PostView = (props) => {
 				
 				<div className="mainPostMetadata">
 					<div className="metaElement op">OP</div>
-					<div className="metaElement nick">Anonimo</div>
-					<div className="metaElement">anon</div>
+					<div className="metaElement nick">{(props.box.user.jerarquia) ? props.box.user.jerarquia.nick : "Anonimo"}</div>
+					<div className="metaElement">{(props.box.user.jerarquia) ? props.box.user.jerarquia.rango : "anon"}</div>
 					<div className="metaElement type">
 						-iconos-
 					</div>
-					<div className="metaElement date">-fecha-</div>
+					<div className="metaElement date">{utils.timeSince(props.box.date.created)}</div>
 				</div>
 				
 				<article className="mainPostContent" itemScope="itemscope" itemType="http://schema.org/NewsArticle">
@@ -143,7 +137,7 @@ const PostView = (props) => {
 						</div>
 					</div>
 					
-					<CommentList coms={coms} box={props.box} />
+					<CommentList box={props.box} />
 					
 				</div>
 				
@@ -154,18 +148,17 @@ const PostView = (props) => {
 }
 
 export async function getServerSideProps(context) {
-	const empty = {props: {category: {}, box: {}, coms: []}}
+	const empty = {props: {category: {}, box: {}, coms: []}};
 	
-	if (context.params.cat === "uploads"){
+	if (context.query.cat === "uploads"){
 		return empty;
 	} else {
-		let response = await Api.getData(context.req, `/api/box/${context.params.cat}/${context.params.bid}`);
+		let response = await Api.getData(context.req, `/api/box/${context.query.cat}/${context.query.bid}`);
 		if (response.success){
 			return {
 				props: {
-					category: (response.data.category) ? response.data.category : {},
-					box: response.data.box,
-					coms: response.data.coms
+					category: (response.data.category) ? response.data.category : null,
+					box: response.data.box
 				}
 			}
 		} else {

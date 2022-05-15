@@ -13,13 +13,12 @@ export default async function(req, res){
 		case "GET":
 			try {
 				let boxs = await dbManager.queryDB(models.Boxs, {bid: bid});
-				let coms = await dbManager.queryDB(models.Coms, {bid: bid}, {"date.created": -1});
-				let cats = await dbManager.queryDB(models.Cats, {catid: cat});
+				//let coms = await dbManager.queryDB(models.Coms, {bid: bid}, {"date.created": -1});
+				let category = await dbManager.queryDB(models.Cats, {catid: cat});
 				
 				let data = {
 					box: (boxs[0]) ? boxs[0] : {},
-					category: (cats[0]) ? cats[0] : null,
-					coms: coms
+					category: (category[0]) ? category[0] : null
 				}
 				
 				res.status(200).json({success: true, data: data});

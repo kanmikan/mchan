@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
 import Navbar from '../components/Navbar';
-import PostContainer from '../components/PostContainer';
+import BoxListContainer from '../components/BoxListContainer';
 import SlideshowElement from '../components/SlideshowElement';
 import ActivityElement from '../components/ActivityElement';
 
@@ -26,12 +26,12 @@ const Index = (props) => {
 						)
 					})}
 				</div>
-				<PostContainer />
+				<BoxListContainer ssr={true} data={props}/>
 			</div>
 			<div className="sideContainer">
 				<div className="sideContainerBottom" id="sideContainerBottom">
 					<div className="slideshowContainer" id="slidecontainer">
-						<SlideshowElement slidedata={props.slidedata} />
+						<SlideshowElement />
 					</div>
 					<div className="activityContainer">
 						<div className="sideTitle">Actividad Reciente</div>
@@ -56,17 +56,13 @@ const Index = (props) => {
 	)
 }
 
-//TODO: esto quedó inutilizado, mover el slidedata a su componente y eliminar lo demas.
-//Es inviable el prerender si despues no se actualizan los datos al cambiar la ruta en el cliente... quien diseñó esto?
 export async function getServerSideProps({req}) {
 	let homedata = await Api.getData(req, "/api/home");
-	let slidedata = await Api.getData(req, "/api/slideshow/home");
 	
 	return {
 		props: {
 			boxs: homedata.data.boxs,
-			cats: homedata.data.cats,
-			slidedata: slidedata.data
+			cats: homedata.data.cats
 		}
 	};
 }

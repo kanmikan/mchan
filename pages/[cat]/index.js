@@ -1,14 +1,28 @@
 import Link from 'next/link';
 import fetch from 'isomorphic-unfetch';
 import Navbar from '../../components/Navbar';
-import PostContainer from '../../components/PostContainer';
+import BoxListContainer from '../../components/BoxListContainer';
 import SlideshowElement from '../../components/SlideshowElement';
 import ActivityElement from '../../components/ActivityElement';
 
 import Api from '../../server/api';
+import {useState, useEffect} from 'react';
 import {useRouter} from 'next/router';
 
 const Category = (props) => {
+	
+	const router = useRouter();
+	const cat = (router.query.cat) ? router.query.cat : "home";
+	const [data, setData] = useState(props.data);
+	
+	useEffect(() => {
+		fetch(`${Api.HOST}/api/cat/${cat}`)
+		.then((res) => res.json())
+		.then((data) => {
+			setData(data.data);
+		});		
+	}, [router.asPath]);
+	
 	return (
 		<body className="main">
 			<div className="mainContainer" id="mainContainer">
@@ -19,18 +33,35 @@ const Category = (props) => {
 					<Link href="/">
 						<a className="catElement catElementSelected"><img src="/assets/uicons/home.svg"></img></a>
 					</Link>
-					{props.cats.map(function(cat){
+					{data.cats.map(function(cat){
 						return (
 							<Link href={"/" + cat.catid} key={cat.catid}>
-								<a className="catElement">&gt;{cat.catid}</a>
+								<a className={`catElement ${(data.category && data.category.catid === cat.catid) ? "catElementSelected" : ""}`}>&gt;{cat.catid}</a>
 							</Link>
 						)
 					})}
 				</div>
-				<PostContainer />
+				<BoxListContainer ssr={false} data={null} />
 			</div>
 			<div className="sideContainer">
 				<div className="sideContainerBottom" id="sideContainerBottom">
+					<div className="categoryInfoContainer containerMain">
+						<div className="categoryInfoContainer">
+							<div className="categoryInfoImage">
+								<img src={data.category.content.media.icon} />
+							</div>
+							<div className="categoryInfoDescription">
+								<h1>{data.category.content.name}</h1>
+								<h2>{data.category.content.description}</h2>
+							</div>
+						</div>
+						<div className="categoryInfoButtons">
+							<div className="mainButton catElementSelected categoryInfoButton categoryHide " data-catid="rss">
+								<span>Ocultar de la home</span>
+							</div>
+						</div>
+					</div>
+				
 					<div className="slideshowContainer" id="slidecontainer">
 						<SlideshowElement />
 					</div>
@@ -57,18 +88,14 @@ const Category = (props) => {
 	)
 }
 
-
-//TODO: esto quedó inutilizado, mover el slidedata a su componente y eliminar lo demas.
+//obtiene
 export async function getServerSideProps(context) {
 	let cat = context.query.cat;
-	let homedata = await Api.getData(context.req, `/api/${cat}`);
-	let slidedata = await Api.getData(context.req, `/api/slideshow/${cat}`);
+	let catdata = await Api.getData(context.req, `/api/cat/${cat}`);
 	
 	return {
 		props: {
-			boxs: homedata.data.boxs,
-			cats: homedata.data.cats,
-			slidedata: slidedata.data
+			data: catdata.data
 		}
 	};
 }

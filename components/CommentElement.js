@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import fetch from 'isomorphic-unfetch';
 import parse from 'html-react-parser';
 import utils from '../server/utils';
 
@@ -20,9 +19,9 @@ const CommentElement = (props) => (
 					<div className="metaElement cid pointer">{props.com.cid}</div>	
 				</div>
 				<div className="commentRightButtons">
-					<div className="metaElement dateComment">-date-</div>
+					<div className="metaElement dateComment">{utils.timeSince(props.com.date.created)}</div>
 					<div className="metaElement ficon pointer actionMod">
-						-menu-
+						<img className="svgIcon" src="/assets/uicons/more-vertical.svg" />
 					</div>
 				</div>
 			</div>
