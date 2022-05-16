@@ -1,11 +1,11 @@
 :root {
-	--colorAccent: #ff5722;
+	--colorAccent: #ff7e24; /*#ff5722;*/
 	--mainBackground: #202020;
 	--sideBarBackground: #2c2b2b;
 	--logoBarBackground: #202020;
 	--buttonBackground: #282828;
-	--buttonBackground-selected: #ff5722;
-	--buttonBackground-hover: #4caf50;
+	--buttonBackground-selected: #ff7e24; /*#ff5722;*/
+    --buttonBackground-hover: #ff7e24; /*#4caf50;*/
 	--tag1: #224824;
 	--form-textArea-text: white;
     --form-textArea: inherit;
@@ -41,7 +41,7 @@
 	--activity-comment-background: #262626;
 	--activity-comment-background-hover: #363535;
 	--op: #224824;
-	--post-icons-background: #4b7214bf;
+	--post-icons-background: #ff7e26; /*#4b7214bf;*/
 	--commentTag: #9e9e9e;
 	--commentTag-hover: orange;
 	--link: #6363f7;
@@ -625,7 +625,7 @@ div.generalMenu::-webkit-scrollbar {
 	width: 40%;
 }
 
-.navbar-menu {
+.navbarmenu {
 	float: right;
     margin-left: auto;
     margin-right: 10px;
@@ -633,7 +633,7 @@ div.generalMenu::-webkit-scrollbar {
     align-items: center;
 }
 
-.navbar-menu li {
+.navbarmenu li {
 	display: flex;
     height: 100%;
     align-items: center;
@@ -643,7 +643,7 @@ div.generalMenu::-webkit-scrollbar {
 	transition: background 0.2s ease-in-out;
 }
 
-.navbar-menu li:hover {
+.navbarmenu li:hover {
 	background: var(--colorAccent);
 }
 
@@ -857,7 +857,6 @@ input:checked + .slider:before {
 	display: block;
 	height: calc(100vw / 6);
 	border-radius: 2px;
-	background: white;
 	transition: filter 0.5s ease-in-out, box-shadow 0.4s ease-in-out;
 	overflow: hidden;
 	position: relative;
@@ -886,7 +885,7 @@ input:checked + .slider:before {
 	background: var(--post-icons-background);
 	padding: 6px 6px 3px 6px;
 	float: left;
-	border-radius: 0px 15px 2px 15px;
+	border-radius: 16px;
 }
 
 .icons img {

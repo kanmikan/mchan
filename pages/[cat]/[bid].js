@@ -113,31 +113,9 @@ const PostView = (props) => {
 					
 					<CommentFormElement box={props.box} onSubmit={onSubmitHandler}/>
 					
-					<div className="contentTitle">
-						<div className="leftTools">
-							<div className="catElement" id="goComment">
-								<img src="/assets/uicons/message-square.svg"></img>
-							</div>
-							<div className="catElement" id="autoLoad">
-								<img src="/assets/uicons/radio.svg"></img>
-							</div>
-						</div>
-						
-						<span>
-							<span id="commentsTitle">Comentarios</span> (<span id="commentCounter">0</span>)
-						</span>
-						
-						<div className="rightTools">
-							<div className="catElement" id="postFiles">
-								<img src="/assets/uicons/folder.svg"></img>
-							</div>
-							<div className="catElement" id="goDown">
-								<img src="/assets/uicons/arrow-down.svg"></img>
-							</div>
-						</div>
-					</div>
+
 					
-					<CommentList box={props.box} />
+					<CommentList box={props.box} coms={props.coms}/>
 					
 				</div>
 				
@@ -158,7 +136,8 @@ export async function getServerSideProps(context) {
 			return {
 				props: {
 					category: (response.data.category) ? response.data.category : null,
-					box: response.data.box
+					box: response.data.box,
+					coms: response.data.coms
 				}
 			}
 		} else {

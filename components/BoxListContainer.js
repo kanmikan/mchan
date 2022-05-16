@@ -26,7 +26,6 @@ const BoxListContainer = (props) => {
 	}, [router.asPath]);
 	
 	//paginacion
-	//TODO adaptar api a paginacion por categorias.
 	const getMorePost = async function(){
 		const res = await fetch(`${Api.HOST}/api/boxs/${cat}/${posts.length}`);
 		const newPosts = await res.json();

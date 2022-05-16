@@ -13,7 +13,7 @@ const Category = (props) => {
 	
 	const router = useRouter();
 	const cat = (router.query.cat) ? router.query.cat : "home";
-	const [data, setData] = useState(props.data);
+	const [data, setData] = useState({category: null, cats: []});
 	
 	useEffect(() => {
 		fetch(`${Api.HOST}/api/cat/${cat}`)
@@ -33,7 +33,7 @@ const Category = (props) => {
 					<Link href="/">
 						<a className="catElement catElementSelected"><img src="/assets/uicons/home.svg"></img></a>
 					</Link>
-					{data.cats.map(function(cat){
+					{(data.cats) && data.cats.map(function(cat){
 						return (
 							<Link href={"/" + cat.catid} key={cat.catid}>
 								<a className={`catElement ${(data.category && data.category.catid === cat.catid) ? "catElementSelected" : ""}`}>&gt;{cat.catid}</a>
@@ -48,11 +48,11 @@ const Category = (props) => {
 					<div className="categoryInfoContainer containerMain">
 						<div className="categoryInfoContainer">
 							<div className="categoryInfoImage">
-								<img src={data.category.content.media.icon} />
+								<img src={(data.category && data.category.content) ? data.category.content.media.icon : "/assets/logo.png"} />
 							</div>
 							<div className="categoryInfoDescription">
-								<h1>{data.category.content.name}</h1>
-								<h2>{data.category.content.description}</h2>
+								<h1>{(data.category && data.category.content) ? data.category.content.name : ""}</h1>
+								<h2>{(data.category && data.category.content) ? data.category.content.description : ""}</h2>
 							</div>
 						</div>
 						<div className="categoryInfoButtons">
@@ -88,10 +88,10 @@ const Category = (props) => {
 	)
 }
 
-//obtiene
+/*
 export async function getServerSideProps(context) {
 	let cat = context.query.cat;
-	let catdata = await Api.getData(context.req, `/api/cat/${cat}`);
+	Ulet catdata = await Api.getData(context.req, `/api/cat/${cat}`);
 	
 	return {
 		props: {
@@ -99,5 +99,6 @@ export async function getServerSideProps(context) {
 		}
 	};
 }
+*/
 
 export default Category;

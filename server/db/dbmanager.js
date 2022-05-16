@@ -1,21 +1,21 @@
 import mongoose from "mongoose";
 import {Query} from "mongoose";
 
-const DB = {};
+var DB;
 
 async function connect(){
-	if (DB.isConnected){
+	if (DB){
+		console.log("[DB] Reutilizando conexion.");
 		return;
+	} else {
+		DB = await mongoose.connect(process.env.MONGO_URI, {
+			dbname: process.env.DB_NAME,
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+			ssl: process.env.SSL
+		});
+		console.log("[DB] Base de datos conectada.");
 	}
-	const db = await mongoose.connect(process.env.MONGO_URI, {
-		dbname: process.env.DB_NAME,
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		ssl: process.env.SSL
-	});
-	
-	DB.isConnected = db.connections[0].readyState;
-	console.log("[DB] Base de datos conectada.");	
 }
 
 function queryDB(model, find, sort={}, limit=0){
